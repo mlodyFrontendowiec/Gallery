@@ -24,6 +24,7 @@ module.exports = {
       },
     ],
     port: 3000,
+    hot: true,
   },
 
   module: {
@@ -31,7 +32,12 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: "babel-loader",
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -45,7 +51,7 @@ module.exports = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin({ template: "./app/index.html" }),
+    new HtmlWebpackPlugin({ template: "./index.html" }),
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
