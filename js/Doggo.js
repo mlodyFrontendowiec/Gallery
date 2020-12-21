@@ -2,6 +2,7 @@ export class Doggo {
   constructor() {
     this.apiUrl = "https://dog.ceo/api";
     this.imgEl = document.querySelector(".featured-dog img");
+    this.backgroundEl = document.querySelector(".featured-dog__background");
   }
   listBreeds() {
     return fetch(`${this.apiUrl}/breeds/list/all`)
@@ -20,9 +21,11 @@ export class Doggo {
       .then((resp) => resp.json())
       .then((data) => data.message);
   }
-  createImage() {
-    this.getRandomImageByBreed("bulldog/french").then((imgSrc) => {
-      this, (this.imgEl.src = imgSrc);
+  init() {
+    this.getRandomImage().then((imgSrc) => {
+      this.imgEl.src = imgSrc;
+      this.backgroundEl.style.background = `url(${imgSrc})`;
     });
+    this.listBreeds().then((breeds) => console.log(breeds));
   }
 }
