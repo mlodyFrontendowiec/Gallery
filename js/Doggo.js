@@ -4,7 +4,17 @@ export class Doggo {
     this.imgEl = document.querySelector(".featured-dog img");
     this.backgroundEl = document.querySelector(".featured-dog__background");
     this.tilesEl = document.querySelector(".tiles");
+    this.spinnerEl = document.querySelector(".spinner");
+
+    this.init();
   }
+  showLoading() {
+    this.spinnerEl.classList.add("spinner--visible");
+  }
+  hideLoading() {
+    this.spinnerEl.classList.remove("spinner--visible");
+  }
+
   listBreeds() {
     return fetch(`${this.apiUrl}/breeds/list/all`)
       .then((res) => res.json())
@@ -23,11 +33,17 @@ export class Doggo {
       .then((data) => data.message);
   }
   init() {
-    this.getRandomImage().then((imgSrc) => {
-      this.imgEl.src = imgSrc;
-      this.backgroundEl.style.background = `url(${imgSrc})`;
-    });
+    this.showLoading();
+    this.getRandomImage().then((img) => this.showImageWhenReady(img));
     this.showAllBreeds();
+  }
+
+  showImageWhenReady(imgSrc) {
+    this.showLoading();
+    window.scrollTo(0, 0);
+    this.imgEl.src = imgSrc;
+    this.backgroundEl.style.background = `url(${imgSrc})`;
+    this.hideLoading();
   }
   addBreed(breed, subBreed) {
     let name;
@@ -47,10 +63,9 @@ export class Doggo {
 
     tileContent.innerText = name;
     tileContent.addEventListener("click", () => {
-      this.getRandomImageByBreed(type).then((imgSrc) => {
-        this.imgEl.src = imgSrc;
-        this.backgroundEl.style.background = `url(${imgSrc})`;
-      });
+      this.getRandomImageByBreed(type).then((img) =>
+        this.showImageWhenReady(img)
+      );
     });
     tile.appendChild(tileContent);
     this.tilesEl.appendChild(tile);
